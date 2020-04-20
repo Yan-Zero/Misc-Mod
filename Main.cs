@@ -12,7 +12,7 @@ using HarmonyLib;
 namespace Circle_Empires_Editor
 {
 
-	[BepInPlugin("Yan.CircleEmpiresEditor", "Circle Empires Editor", "0.3.0")]
+	[BepInPlugin("Yan.CircleEmpiresEditor", "Circle Empires Editor", "0.3.1")]
 	public class Circle_Empires_Editor : BaseUnityPlugin
 	{
         private static GameObject manager = null;
@@ -125,7 +125,7 @@ namespace Circle_Empires_Editor
         private void Awake()
         {
             Hotkey_UpLevel = Config.Bind("Cheat", "Apply UpLevel Cheat", new KeyboardShortcut(KeyCode.F12, new KeyCode[] { KeyCode.LeftControl }));
-            Hotkey_SetSpeed = Config.Bind("Cheat", "Apply SetSpeed Cheat", new KeyboardShortcut(KeyCode.F9, new KeyCode[] { KeyCode.LeftControl }));
+            Hotkey_SetSpeed = Config.Bind("Cheat", "Apply Speed Cheat", new KeyboardShortcut(KeyCode.F9, new KeyCode[] { KeyCode.LeftControl }));
             Hotkey_ChangePlayer = Config.Bind("Cheat", "Apply ChangePlayer Cheat", new KeyboardShortcut(KeyCode.F8, new KeyCode[] { KeyCode.LeftControl }));
 
             HarmonyPatches.Initialize();

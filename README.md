@@ -1,2 +1,25 @@
-# Circle-Empires-Editor
-BepInEx Mod of Circle Empires. A cheat mod.
+﻿# Circle-Empires-Editor
+BepInEx Mod of Circle Empires.
+## 详细说明：暂时未完成
+## 更新日志：
+* v0.3.1
+修正了 精神控制 。
+可以单独控制，而非整个地区的所有部队一起被控制。
+
+* v0.3.0
+添加了新功能：精神控制（快捷键 Ctrl + F8）
+通过点击敌方单位，就可以转为我方单位。
+
+* v0.2.1
+修改了单位加速的逻辑，套用了 Freeze 的部分，使得可以取消。
+
+* v0.2.0
+添加了新功能：单位加速（快捷键 Ctrl + F9）
+可以使得单位的速度加快，包括但不限于攻速移速。
+
+* v0.1.0
+修改了 UpLevel 的逻辑，使得其可以完全给所有选中的单位升级。
+
+* v0.0.1
+开创项目。
+添加了功能：一键升级（快捷键 Ctrl + F12）
