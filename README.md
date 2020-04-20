@@ -6,7 +6,7 @@ BepInEx Mod of Circle Empires.
 Change some name of cheates.
 
 * v0.4.0
-Integrat Circle-Empires-No-Intro-Video ([CENoIntroVideoMod](#https://github.com/RoJoJoey/CENoIntroVideoMod)).
+Integrat Circle-Empires-No-Intro-Video ([CENoIntroVideoMod](https://github.com/RoJoJoey/CENoIntroVideoMod)).
 Add Function: NoIntroVideo.
 
 * v0.3.1
@@ -42,7 +42,7 @@ Can upgrade level of unit that is selected to max.
 修改了一些名字。
 
 * v0.4.0
-整合了 Circle-Empires-No-Intro-Video ([CENoIntroVideoMod](#https://github.com/RoJoJoey/CENoIntroVideoMod))
+整合了 Circle-Empires-No-Intro-Video ([CENoIntroVideoMod](https://github.com/RoJoJoey/CENoIntroVideoMod))
 添加了功能 NoIntroVideo 。
 
 * v0.3.1
