@@ -8,11 +8,12 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using HarmonyLib;
+using UnityEngine.UI;
 
 namespace Circle_Empires_Editor
 {
 
-	[BepInPlugin("Yan.CircleEmpiresEditor", "Circle Empires Editor", "0.3.1")]
+	[BepInPlugin("Yan.CircleEmpiresEditor", "Circle Empires Editor", "0.4.0")]
 	public class Circle_Empires_Editor : BaseUnityPlugin
 	{
         private static GameObject manager = null;
@@ -128,6 +129,8 @@ namespace Circle_Empires_Editor
             Hotkey_SetSpeed = Config.Bind("Cheat", "Apply Speed Cheat", new KeyboardShortcut(KeyCode.F9, new KeyCode[] { KeyCode.LeftControl }));
             Hotkey_ChangePlayer = Config.Bind("Cheat", "Apply ChangePlayer Cheat", new KeyboardShortcut(KeyCode.F8, new KeyCode[] { KeyCode.LeftControl }));
 
+            RuntimeConfig.NoIntroVideo = Config.Bind("OtherFunction", "NoIntroVideo", true, "Prevent the intro video from playing on startup.").Value;
+
             HarmonyPatches.Initialize();
         }
     }
@@ -144,15 +147,27 @@ namespace Circle_Empires_Editor
                 __instance.ChangePlayerTo(__instance.general.locallyControlledPlayer);
         }
 
+        public static void IntroVideoUpdatePrefix(IntroVideo __instance)
+        {
+            if (__instance.startDone == 0 && __instance.manageContent.appInitializationDone > 0 && RuntimeConfig.NoIntroVideo)
+            {
+                __instance.startDone = 1;
+                Button component = __instance.transform.parent.Find("CloseIntroVideoButton").gameObject.GetComponent<Button>();
+                component.onClick.Invoke();
+            }
+        }
+
         public static void Initialize()
         {
             harmony.Patch(AccessTools.Method(typeof(Thing), "ShowTooltip"),null, new HarmonyMethod(thisType, "ShowTooltipPostfix"));
+            harmony.Patch(AccessTools.Method(typeof(IntroVideo), "Update"), new HarmonyMethod(thisType, "IntroVideoUpdatePrefix"));
         }
     }
 
     public static class RuntimeConfig
     {
         public static bool ChangePlayerEnable = false;
+        public static bool NoIntroVideo = true;
     }
 
 }
