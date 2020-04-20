@@ -13,7 +13,7 @@ using UnityEngine.UI;
 namespace Circle_Empires_Editor
 {
 
-	[BepInPlugin("Yan.CircleEmpiresEditor", "Circle Empires Editor", "0.4.0")]
+	[BepInPlugin("Yan.CircleEmpiresEditor", "Circle Empires Editor", "0.4.1")]
 	public class Circle_Empires_Editor : BaseUnityPlugin
 	{
         private static GameObject manager = null;
@@ -22,11 +22,11 @@ namespace Circle_Empires_Editor
 
         public ConfigEntry<KeyboardShortcut> Hotkey_UpLevel { get; private set; }
         public ConfigEntry<KeyboardShortcut> Hotkey_SetSpeed { get; private set; }
-        public ConfigEntry<KeyboardShortcut> Hotkey_ChangePlayer { get; private set; }
+        public ConfigEntry<KeyboardShortcut> Hotkey_MindControl { get; private set; }
 
         public Color Unfreeze;
 
-        private int timeChangePlayer = 100;
+        private int timeMindControl = 100;
 
         public bool Initialize()
         {
@@ -108,26 +108,26 @@ namespace Circle_Empires_Editor
                 UpLevel();
             if (Hotkey_SetSpeed.Value.IsDown())
                 SetSpeed();
-            if (Hotkey_ChangePlayer.Value.IsDown())
+            if (Hotkey_MindControl.Value.IsDown())
             {
                 if (!Initialize())
                     return;
                 RuntimeConfig.ChangePlayerEnable = !RuntimeConfig.ChangePlayerEnable;
-                timeChangePlayer = 0;
-                Logger.Log(LogLevel.Info, "ChangePlayer " + ( RuntimeConfig.ChangePlayerEnable ? "Enable" : "Disable"));
+                timeMindControl = 0;
+                Logger.Log(LogLevel.Info, "Mind Control Is " + ( RuntimeConfig.ChangePlayerEnable ? "Enable" : "Disable"));
             }
-            if(timeChangePlayer < 100)
+            if(timeMindControl < 100)
             {
-                manageUI.ShowToolTip(10, Screen.height - 10, "ChangePlayer " + (RuntimeConfig.ChangePlayerEnable ? "Enable" : "Disable"));
-                timeChangePlayer++;
+                manageUI.ShowToolTip(10, Screen.height - 10, "Mind Control Is " + (RuntimeConfig.ChangePlayerEnable ? "Enable" : "Disable"));
+                timeMindControl++;
             }
         }
 
         private void Awake()
         {
-            Hotkey_UpLevel = Config.Bind("Cheat", "Apply UpLevel Cheat", new KeyboardShortcut(KeyCode.F12, new KeyCode[] { KeyCode.LeftControl }));
-            Hotkey_SetSpeed = Config.Bind("Cheat", "Apply Speed Cheat", new KeyboardShortcut(KeyCode.F9, new KeyCode[] { KeyCode.LeftControl }));
-            Hotkey_ChangePlayer = Config.Bind("Cheat", "Apply ChangePlayer Cheat", new KeyboardShortcut(KeyCode.F8, new KeyCode[] { KeyCode.LeftControl }));
+            Hotkey_UpLevel = Config.Bind("Cheat-Hotkey", "Unit Level Up Cheat", new KeyboardShortcut(KeyCode.F12, new KeyCode[] { KeyCode.LeftControl }));
+            Hotkey_SetSpeed = Config.Bind("Cheat-Hotkey", "Unit Speed Cheat", new KeyboardShortcut(KeyCode.F9, new KeyCode[] { KeyCode.LeftControl }));
+            Hotkey_MindControl = Config.Bind("Cheat-Hotkey", "Mind Control Cheat", new KeyboardShortcut(KeyCode.F8, new KeyCode[] { KeyCode.LeftControl }));
 
             RuntimeConfig.NoIntroVideo = Config.Bind("OtherFunction", "NoIntroVideo", true, "Prevent the intro video from playing on startup.").Value;
 
