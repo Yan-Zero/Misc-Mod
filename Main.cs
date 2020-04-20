@@ -49,7 +49,7 @@ namespace Circle_Empires_Editor
         }
 
         private void UpLevel()
-		{
+	{
             Logger.Log(LogLevel.Info, "UpLevel");
             if (!Initialize())
                 return;
