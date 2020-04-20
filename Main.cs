@@ -114,11 +114,11 @@ namespace Circle_Empires_Editor
                     return;
                 RuntimeConfig.ChangePlayerEnable = !RuntimeConfig.ChangePlayerEnable;
                 timeMindControl = 0;
-                Logger.Log(LogLevel.Info, "Mind Control Is " + ( RuntimeConfig.ChangePlayerEnable ? "Enable" : "Disable"));
+                Logger.Log(LogLevel.Info, "Mind Control " + ( RuntimeConfig.ChangePlayerEnable ? "Enable" : "Disable"));
             }
             if(timeMindControl < 100)
             {
-                manageUI.ShowToolTip(10, Screen.height - 10, "Mind Control Is " + (RuntimeConfig.ChangePlayerEnable ? "Enable" : "Disable"));
+                manageUI.ShowToolTip(10, Screen.height - 10, "Mind Control " + (RuntimeConfig.ChangePlayerEnable ? "Enable" : "Disable"));
                 timeMindControl++;
             }
         }
