@@ -9,11 +9,12 @@ using System.Threading.Tasks;
 using UnityEngine;
 using HarmonyLib;
 using UnityEngine.UI;
+using System.Reflection;
 
 namespace Circle_Empires_Editor
 {
 
-	[BepInPlugin("Yan.CircleEmpiresEditor", "Circle Empires Editor", "0.4.0")]
+	[BepInPlugin("Yan.CircleEmpiresEditor", "Circle Empires Editor", "0.4.2")]
 	public class Circle_Empires_Editor : BaseUnityPlugin
 	{
         private static GameObject manager = null;
@@ -22,11 +23,15 @@ namespace Circle_Empires_Editor
 
         public ConfigEntry<KeyboardShortcut> Hotkey_UpLevel { get; private set; }
         public ConfigEntry<KeyboardShortcut> Hotkey_SetSpeed { get; private set; }
-        public ConfigEntry<KeyboardShortcut> Hotkey_ChangePlayer { get; private set; }
+        public ConfigEntry<KeyboardShortcut> Hotkey_MindControl { get; private set; }
 
-        public Color Unfreeze;
+        private int timeMindControl = 100;
+        private MethodInfo ThingShowFreezeVisual;
 
-        private int timeChangePlayer = 100;
+        private Vector2 ClampWindowSize(Vector2 orig)
+        {
+            return new Vector2(Mathf.Clamp(orig.x, Mathf.Min(960, Screen.width), Screen.width), Mathf.Clamp(orig.y, Mathf.Min(720, Screen.height), Screen.height));
+        }
 
         public bool Initialize()
         {
@@ -36,8 +41,8 @@ namespace Circle_Empires_Editor
                 {
                     manager = GameObject.FindGameObjectWithTag("Manager");
                     manageUI = manager.GetComponent<ManageUI>();
-                    Unfreeze = ManageUI.HexToColor("FF3300FF");
                     general = manager.GetComponent<General>();
+                    ThingShowFreezeVisual = AccessTools.Method(typeof(Thing), "ShowFreezeVisual");
                 }
             }
             catch (Exception ex)
@@ -49,14 +54,12 @@ namespace Circle_Empires_Editor
         }
 
         private void UpLevel()
-		{
+        {
             Logger.Log(LogLevel.Info, "UpLevel");
-            if (!Initialize())
-                return;
 
             if (manageUI.selectedThings.Count >= 1)
             {
-                for(int i = 0; i < manageUI.selectedThings.Count;)
+                for (int i = 0; i < manageUI.selectedThings.Count;)
                 {
                     if (manageUI.selectedThings[i].GainXp(100000000) == 0)
                         i++;
@@ -67,32 +70,15 @@ namespace Circle_Empires_Editor
 
         }
 
-        private void ShowUnfreezeVisual(Thing thing)
-        {
-            if (thing.spriteRenderer != null)
-                thing.spriteRenderer.color = Unfreeze;
-            if (thing.droppableFreezeParticles != null)
-                thing.droppableFreezeParticles.gameObject.SetActive(value: true);
-            else if (thing.visualGroup != null)
-            {
-                GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(position: new Vector3((float)thing.currentPos.x / 1000f, (float)thing.currentPos.y / 1000f * (float)thing.general.angleY / 1000f, 0f), original: thing.frozenParticlesPrefab, rotation: Quaternion.identity);
-                gameObject.transform.SetParent(thing.visualGroup.transform);
-                thing.droppableFreezeParticles = gameObject.GetComponent<DroppableParticles>();
-                thing.droppableFreezeParticles.Init(base.gameObject);
-            }
-        }
-
         private void SetSpeed()
         {
             Logger.Log(LogLevel.Info, "SetSpeed");
-            if (!Initialize())
-                return;
 
             if (manageUI.selectedThings.Count >= 1)
             {
                 foreach(var i in manageUI.selectedThings)
                 {
-                    ShowUnfreezeVisual(i);
+                    ThingShowFreezeVisual.Invoke(i, new object[] { });
                     i.freezeDuration = 100000000;
                     i.freezeFactor = 1000000;
                 }
@@ -108,30 +94,30 @@ namespace Circle_Empires_Editor
                 UpLevel();
             if (Hotkey_SetSpeed.Value.IsDown())
                 SetSpeed();
-            if (Hotkey_ChangePlayer.Value.IsDown())
+            if (Hotkey_MindControl.Value.IsDown())
             {
-                if (!Initialize())
-                    return;
                 RuntimeConfig.ChangePlayerEnable = !RuntimeConfig.ChangePlayerEnable;
-                timeChangePlayer = 0;
-                Logger.Log(LogLevel.Info, "ChangePlayer " + ( RuntimeConfig.ChangePlayerEnable ? "Enable" : "Disable"));
+                timeMindControl = 0;
+                Logger.Log(LogLevel.Info, "Mind Control " + ( RuntimeConfig.ChangePlayerEnable ? "Enable" : "Disable"));
             }
-            if(timeChangePlayer < 100)
+            if(timeMindControl < 100)
             {
-                manageUI.ShowToolTip(10, Screen.height - 10, "ChangePlayer " + (RuntimeConfig.ChangePlayerEnable ? "Enable" : "Disable"));
-                timeChangePlayer++;
+                manageUI.ShowToolTip(10, Screen.height - 10, "Mind Control " + (RuntimeConfig.ChangePlayerEnable ? "Enable" : "Disable"));
+                timeMindControl++;
             }
         }
 
         private void Awake()
         {
-            Hotkey_UpLevel = Config.Bind("Cheat", "Apply UpLevel Cheat", new KeyboardShortcut(KeyCode.F12, new KeyCode[] { KeyCode.LeftControl }));
-            Hotkey_SetSpeed = Config.Bind("Cheat", "Apply Speed Cheat", new KeyboardShortcut(KeyCode.F9, new KeyCode[] { KeyCode.LeftControl }));
-            Hotkey_ChangePlayer = Config.Bind("Cheat", "Apply ChangePlayer Cheat", new KeyboardShortcut(KeyCode.F8, new KeyCode[] { KeyCode.LeftControl }));
+            DontDestroyOnLoad(this);
+
+            Hotkey_UpLevel = Config.Bind("Cheat-Hotkey", "Unit Level Up Cheat", new KeyboardShortcut(KeyCode.F12, new KeyCode[] { KeyCode.LeftControl }));
+            Hotkey_SetSpeed = Config.Bind("Cheat-Hotkey", "Unit Speed Cheat", new KeyboardShortcut(KeyCode.F9, new KeyCode[] { KeyCode.LeftControl }));
+            Hotkey_MindControl = Config.Bind("Cheat-Hotkey", "Mind Control Cheat", new KeyboardShortcut(KeyCode.F8, new KeyCode[] { KeyCode.LeftControl }));
 
             RuntimeConfig.NoIntroVideo = Config.Bind("OtherFunction", "NoIntroVideo", true, "Prevent the intro video from playing on startup.").Value;
 
-            HarmonyPatches.Initialize();
+            HarmonyPatches.Initialize(this);
         }
     }
 
@@ -139,6 +125,7 @@ namespace Circle_Empires_Editor
     {
         public static readonly Harmony harmony = new Harmony("Yan.CircleEmpiresEditor");
         public static readonly Type thisType = typeof(HarmonyPatches);
+        
 
         public static void ShowTooltipPostfix(Thing __instance)
         {
@@ -152,15 +139,17 @@ namespace Circle_Empires_Editor
             if (__instance.startDone == 0 && __instance.manageContent.appInitializationDone > 0 && RuntimeConfig.NoIntroVideo)
             {
                 __instance.startDone = 1;
+                RuntimeConfig.Circle_Empires_Editor.Initialize();
                 Button component = __instance.transform.parent.Find("CloseIntroVideoButton").gameObject.GetComponent<Button>();
                 component.onClick.Invoke();
             }
         }
 
-        public static void Initialize()
+        public static void Initialize(Circle_Empires_Editor instance)
         {
             harmony.Patch(AccessTools.Method(typeof(Thing), "ShowTooltip"),null, new HarmonyMethod(thisType, "ShowTooltipPostfix"));
             harmony.Patch(AccessTools.Method(typeof(IntroVideo), "Update"), new HarmonyMethod(thisType, "IntroVideoUpdatePrefix"));
+            RuntimeConfig.Circle_Empires_Editor = instance;
         }
     }
 
@@ -168,6 +157,13 @@ namespace Circle_Empires_Editor
     {
         public static bool ChangePlayerEnable = false;
         public static bool NoIntroVideo = true;
+        public static Circle_Empires_Editor Circle_Empires_Editor = null;
     }
+
+
+    //public class SettingUI : MonoBehaviour
+    //{
+
+    //}
 
 }
