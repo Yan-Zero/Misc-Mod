@@ -1,9 +1,22 @@
-﻿# Circle-Empires-Editor
+# 赞助码 Sponsorship
+## 微信
+![avatar](https://www.hualigs.cn/image/600aa12470350.jpg) 
+
+# Circle-Empires-Editor
 BepInEx Mod of Circle Empires.
 ## Detailed Description(haven't completed for now)
 ## Next Plan
-Add Setting UI that can enable and disable function.
+Complete Setting Windows.
+### Want to add
+* Can change hotkey in it.
+* Some cheat change to toggle by button instead of hotkey.
+* To be continued...
 ## Change Log:
+* v0.4.5
+Add Setting Windows(Hotkey: Ctrl + F12).
+Creat Unity UI Frame.(But it is poor...)
+Add Title of Windows and Exit button.
+
 * v0.4.2
 Delete surplus code and improve logic of program.
 
@@ -34,7 +47,7 @@ Fix logic of "Unit Level Up" to make it can upgrade all of selceted unit.
 
 * v0.0.1
 Creat Project.
-Add Cheat: Unit Level Up (Hotkey: Ctrl + F12).
+Add Cheat: Unit Level Up (Hotkey: Ctrl + F7).
 Can upgrade level of unit that is selected to max.
 
 ------
@@ -43,8 +56,17 @@ Can upgrade level of unit that is selected to max.
 一个 Circle Empires 的 BIE Mod。
 ## 详细说明：暂时未完成
 ## 下一个计划
-添加功能设置界面。
+完善设置界面。
+### 即将加入
+* 可以在设置界面修改快捷键。
+* 一些功能/修改改为在其中开启，而不是用快捷键开启。
+* 未完待续......
 ## 更新日志：
+* v0.4.5
+添加设置界面（快捷键 Ctrl + F12）.
+建立了一个基于 Unity UI 的 UI 框架（但是很菜）
+添加了标题和退出按钮。
+
 * v0.4.2
 删除了多余的代码，改进了些许逻辑。
 
@@ -75,5 +97,5 @@ Can upgrade level of unit that is selected to max.
 
 * v0.0.1
 开创项目。
-添加了功能：单位升级（快捷键 Ctrl + F12）。
+添加了功能：单位升级（快捷键 Ctrl + F7）。
 可以升级所选单位的等级。

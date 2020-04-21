@@ -13,7 +13,7 @@ using System.Reflection;
 
 namespace Circle_Empires_Editor
 {
-	[BepInPlugin("Yan.CircleEmpiresEditor", "Circle Empires Editor", "0.4.2")]
+	[BepInPlugin("Yan.CircleEmpiresEditor", "Circle Empires Editor", "0.4.5")]
 	public class Circle_Empires_Editor : BaseUnityPlugin
 	{
         public new ManualLogSource Logger;
